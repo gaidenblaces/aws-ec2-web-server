@@ -24,9 +24,7 @@ EC2
 Ubuntu 24.04 LTS
    │
    ├── SSH
-   │
    ├── Nginx
-   │
    └── IAM Instance Profile
             │
             ▼
@@ -37,13 +35,14 @@ Ubuntu 24.04 LTS
             │
             ▼
            S3
+
 EC2
-Sistema operativo: Ubuntu 24.04 LTS
+Ubuntu 24.04 LTS
 Instance Type: t3.micro
 Región: us-east-1
 Zona de disponibilidad: us-east-1c
 
-La instancia EC2 fue utilizada como servidor Linux para practicar administración del sistema, acceso remoto, servicios y comunicación con otros servicios de AWS.
+La instancia EC2 fue utilizada como servidor Linux para practicar administración del sistema, acceso remoto y comunicación con servicios de AWS.
 
 Networking
 
@@ -51,18 +50,16 @@ La infraestructura utilizó una VPC con el bloque:
 
 172.31.0.0/16
 
-Dentro de la VPC se utilizó una subnet:
+Se utilizó una subnet:
 
 172.31.16.0/20
+
 Route Table
-
-Se configuraron rutas para permitir comunicación local dentro de la VPC y salida hacia Internet mediante un Internet Gateway.
-
 172.31.0.0/16 → local
 0.0.0.0/0     → Internet Gateway
 Internet Gateway
 
-La VPC utiliza un Internet Gateway para permitir comunicación entre la red y el Internet público cuando las demás configuraciones de red lo permiten.
+Se utilizó un Internet Gateway para permitir la comunicación entre la VPC e Internet.
 
 Security Group
 
@@ -103,20 +100,22 @@ Los objetos de respaldo se organizaron bajo:
 
 backup/
 
-También se practicaron operaciones como:
+Se practicaron operaciones como:
 
 Subir objetos.
 Eliminar objetos.
 Consultar metadatos.
 Revisar permisos.
-Trabajar con las claves de objetos de S3.
 IAM
 
 Se creó un IAM Role para permitir que la instancia EC2 interactuara con S3 sin almacenar Access Keys permanentes dentro del servidor.
 
 IAM Role
+
 EC2-s3-BackupRole
+
 Instance Profile
+
 EC2-S3-BackupProfile
 
 La relación utilizada fue:
@@ -146,7 +145,7 @@ Principio de mínimo privilegio
 
 Se practicó el principio de mínimo privilegio otorgando al Role solamente los permisos necesarios para trabajar con los objetos de respaldo.
 
-Durante las pruebas, la instancia pudo realizar operaciones permitidas sobre los objetos, mientras que una operación no autorizada como listar el contenido del bucket produjo un error AccessDenied.
+Durante las pruebas, una operación no autorizada como listar el contenido del bucket produjo un error AccessDenied.
 
 Esto permitió comprobar que los permisos IAM estaban siendo aplicados correctamente.
 
@@ -166,7 +165,7 @@ Durante el laboratorio se presentó un problema de conexión SSH:
 
 Connection timed out
 
-Se investigó la conectividad revisando diferentes componentes de la infraestructura:
+Se investigó la conectividad revisando diferentes componentes:
 
 EC2
  ↓
@@ -190,8 +189,6 @@ La IP pública del cliente había cambiado, mientras que la regla SSH todavía p
 
 Después de identificar y corregir la regla correspondiente, se pudo restablecer el acceso SSH.
 
-Este proceso permitió practicar troubleshooting básico de infraestructura y conectividad en AWS.
-
 Lo que practiqué
 Administración básica de Linux.
 SSH.
@@ -205,7 +202,7 @@ Network ACL.
 Elastic IP.
 S3.
 AWS CLI.
-IAM Users.
+IAM.
 IAM Roles.
 IAM Policies.
 Trust Policies.
@@ -216,6 +213,6 @@ Troubleshooting de conectividad.
 Configuración básica de servicios en una instancia Linux.
 Nota
 
-Este repositorio documenta un laboratorio práctico realizado en AWS. Algunas de las configuraciones y pruebas originales fueron realizadas directamente mediante AWS CLI y AWS Management Console y no todas las sesiones de terminal fueron conservadas como archivos.
+Este repositorio documenta un laboratorio práctico realizado en AWS. Algunas configuraciones y pruebas originales fueron realizadas mediante AWS CLI y AWS Management Console y no todas las sesiones de terminal fueron conservadas como archivos.
 
 Por este motivo, la documentación se centra en la infraestructura configurada, los conceptos practicados y las pruebas que pueden ser verificadas nuevamente.
