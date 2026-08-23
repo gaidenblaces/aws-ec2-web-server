@@ -1,11 +1,39 @@
-# AWS EC2 Web Server Lab
-Laboratorio práctico realizado en AWS para aprender los fundamentos del despliegue y administración de una instancia EC2 con Ubuntu.
+# AWS Infrastructure Lab
 
-## Objetivos
-- Crear y administrar una instancia EC2 en AWS.
-- Utilizar Ubuntu como sistema operativo de la instancia.
-- Conectarse a la instancia mediante SSH.
-- Configurar reglas básicas de acceso mediante Security Groups.
-- Instalar y administrar un servidor web Nginx.
-- Utilizar AWS CLI para consultar y administrar recursos.
-- Realizar pruebas básicas de conectividad y funcionamiento del servidor.
+Laboratorio práctico de infraestructura realizado en Amazon Web Services (AWS).
+
+## Objetivo
+
+Construir y configurar una infraestructura básica en AWS utilizando una instancia EC2, networking, acceso SSH, Nginx, almacenamiento S3 e IAM.
+
+El laboratorio también incluyó pruebas de permisos y resolución de problemas de conectividad.
+
+## Arquitectura
+
+```text
+Internet
+   │
+   ▼
+VPC
+   │
+   ▼
+Subnet
+   │
+   ▼
+EC2
+Ubuntu 24.04 LTS
+   │
+   ├── SSH
+   │
+   ├── Nginx
+   │
+   └── IAM Instance Profile
+            │
+            ▼
+         IAM Role
+            │
+            ▼
+       IAM Policy
+            │
+            ▼
+           S3
