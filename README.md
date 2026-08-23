@@ -1,124 +1,116 @@
-# AWS Infrastructure Lab
+# ☁️ AWS Infrastructure Lab
 
-Laboratorio práctico de infraestructura realizado en Amazon Web Services (AWS).
+Laboratorio práctico de infraestructura realizado en **AWS**, donde desplegué y configuré una instancia EC2 y trabajé con networking, SSH, Nginx, S3 e IAM.
 
-## Objetivo
+## 🎯 Objetivo
 
-Construir y configurar una infraestructura básica en AWS utilizando una instancia EC2, networking, acceso SSH, Nginx, almacenamiento S3 e IAM.
+Practicar la creación y administración de infraestructura básica en AWS, incluyendo:
 
-El laboratorio también incluyó pruebas de permisos y resolución de problemas de conectividad.
+- EC2
+- VPC y Subnets
+- Security Groups
+- Route Tables
+- Internet Gateway
+- SSH
+- Nginx
+- S3
+- IAM Roles y Policies
+- AWS CLI
+- Troubleshooting
 
-## Arquitectura
+## 🏗️ Arquitectura
 
 ```text
-Internet
-   │
-   ▼
-VPC
-   │
-   ▼
-Subnet
-   │
-   ▼
+                    INTERNET
+                       │
+                       ▼
+                  ┌─────────┐
+                  │   VPC   │
+                  └────┬────┘
+                       │
+                    Subnet
+                       │
+                       ▼
+                  ┌─────────┐
+                  │   EC2   │
+                  │ Ubuntu  │
+                  └────┬────┘
+                       │
+                Instance Profile
+                       │
+                       ▼
+                  IAM Role
+                       │
+                       ▼
+                 IAM Policy
+                       │
+                       ▼
+                  ┌─────────┐
+                  │   S3    │
+                  │ Backup  │
+                  └─────────┘
 EC2
-Ubuntu 24.04 LTS
-   │
-   ├── SSH
-   ├── Nginx
-   └── IAM Instance Profile
-            │
-            ▼
-         IAM Role
-            │
-            ▼
-       IAM Policy
-            │
-            ▼
-           S3
-
-EC2
-Ubuntu 24.04 LTS
+OS: Ubuntu 24.04 LTS
 Instance Type: t3.micro
 Región: us-east-1
-Zona de disponibilidad: us-east-1c
+Zona: us-east-1c
 
-La instancia EC2 fue utilizada como servidor Linux para practicar administración del sistema, acceso remoto y comunicación con servicios de AWS.
+La instancia fue utilizada como servidor Linux para practicar administración, acceso remoto y comunicación con servicios de AWS.
 
-Networking
+🌐 Networking
 
-La infraestructura utilizó una VPC con el bloque:
+Configuración principal:
 
-172.31.0.0/16
-
-Se utilizó una subnet:
-
-172.31.16.0/20
-
-Route Table
-172.31.0.0/16 → local
-0.0.0.0/0     → Internet Gateway
-Internet Gateway
-
-Se utilizó un Internet Gateway para permitir la comunicación entre la VPC e Internet.
-
+Recurso	Configuración
+VPC	172.31.0.0/16
+Subnet	172.31.16.0/20
+Internet Gateway	Configurado
+Route Table	Ruta local + salida a Internet
+Network ACL	Revisada
+Security Group	SSH + HTTP
 Security Group
+SSH  → TCP 22 → IP del cliente /32
+HTTP → TCP 80 → 0.0.0.0/0
 
-Se configuró un Security Group para controlar el acceso a la instancia.
+El acceso SSH fue restringido a una dirección IP específica.
 
-Reglas principales:
+🔑 SSH
 
-SSH  TCP 22  → IP del cliente /32
-HTTP TCP 80  → 0.0.0.0/0
+Administré la instancia mediante SSH utilizando una clave privada.
 
-El acceso SSH se restringió a una dirección IP específica mediante /32.
+También practiqué la protección de la clave mediante permisos de Linux.
 
-Network ACL
+🌐 Nginx
 
-También se revisó la Network ACL asociada a la subnet para comprobar que no estuviera bloqueando la comunicación.
+Instalé y verifiqué Nginx dentro de la instancia EC2 y comprobé el acceso mediante HTTP.
 
-SSH
+🪣 S3
 
-La instancia fue administrada remotamente mediante SSH utilizando una clave privada.
-
-Se practicó el uso de claves SSH y la protección de archivos de clave mediante permisos de Linux.
-
-Nginx
-
-Se instaló y verificó el servicio Nginx dentro de la instancia EC2.
-
-También se comprobó la comunicación HTTP mediante el puerto 80.
-
-S3
-
-Se creó el bucket:
+Bucket utilizado:
 
 cloud-returnal-2999
-
-Se utilizó S3 para practicar almacenamiento y operaciones con objetos mediante AWS CLI.
 
 Los objetos de respaldo se organizaron bajo:
 
 backup/
 
-Se practicaron operaciones como:
+Se practicaron operaciones de:
 
-Subir objetos.
-Eliminar objetos.
-Consultar metadatos.
-Revisar permisos.
-IAM
+Subida de objetos.
+Eliminación de objetos.
+Consulta de metadatos.
+Control de permisos.
+🔐 IAM
 
-Se creó un IAM Role para permitir que la instancia EC2 interactuara con S3 sin almacenar Access Keys permanentes dentro del servidor.
-
-IAM Role
+Para permitir que EC2 interactuara con S3 utilicé un IAM Role:
 
 EC2-s3-BackupRole
 
-Instance Profile
+Con su Instance Profile:
 
 EC2-S3-BackupProfile
 
-La relación utilizada fue:
+La arquitectura de permisos fue:
 
 EC2
  ↓
@@ -129,43 +121,27 @@ IAM Role
 IAM Policy
  ↓
 S3
-Trust Policy
 
-La Trust Policy permite que el servicio EC2 pueda asumir el Role mediante STS.
+Los permisos fueron limitados a los objetos de:
 
-Permission Policy
+cloud-returnal-2999/backup/*
+🛡️ Mínimo privilegio
 
-El Role recibió permisos limitados sobre los objetos ubicados dentro de:
+Se configuraron permisos específicos para permitir operaciones sobre los objetos de respaldo.
 
-arn:aws:s3:::cloud-returnal-2999/backup/*
+Durante las pruebas, una operación no autorizada como listar el bucket produjo:
 
-Los permisos utilizados incluyeron operaciones de lectura y escritura de objetos.
+AccessDenied
 
-Principio de mínimo privilegio
+Esto permitió comprobar que los permisos IAM estaban funcionando según lo esperado.
 
-Se practicó el principio de mínimo privilegio otorgando al Role solamente los permisos necesarios para trabajar con los objetos de respaldo.
+🔎 Troubleshooting
 
-Durante las pruebas, una operación no autorizada como listar el contenido del bucket produjo un error AccessDenied.
-
-Esto permitió comprobar que los permisos IAM estaban siendo aplicados correctamente.
-
-STS
-
-Se utilizó AWS Security Token Service (STS) para comprobar qué identidad estaba utilizando la instancia EC2.
-
-La comprobación permitió verificar que la instancia estaba utilizando el Role:
-
-EC2-s3-BackupRole
-
-en lugar de Access Keys configuradas manualmente dentro de la instancia.
-
-Troubleshooting
-
-Durante el laboratorio se presentó un problema de conexión SSH:
+Durante el laboratorio apareció un problema:
 
 Connection timed out
 
-Se investigó la conectividad revisando diferentes componentes:
+Se investigó la conectividad revisando:
 
 EC2
  ↓
@@ -183,36 +159,33 @@ Security Group
  ↓
 SSH
 
-El problema se relacionó con la dirección IP autorizada en el Security Group.
+La causa fue una regla SSH que todavía utilizaba una dirección IP anterior.
 
-La IP pública del cliente había cambiado, mientras que la regla SSH todavía permitía la dirección anterior.
+La IP pública del cliente había cambiado.
 
-Después de identificar y corregir la regla correspondiente, se pudo restablecer el acceso SSH.
+Después de actualizar la regla correspondiente, se recuperó el acceso SSH.
 
-Lo que practiqué
-Administración básica de Linux.
-SSH.
-EC2.
-VPC.
-Subnets.
-Route Tables.
-Internet Gateway.
-Security Groups.
-Network ACL.
-Elastic IP.
-S3.
-AWS CLI.
-IAM.
-IAM Roles.
-IAM Policies.
-Trust Policies.
-Instance Profiles.
-STS.
-Principio de mínimo privilegio.
-Troubleshooting de conectividad.
-Configuración básica de servicios en una instancia Linux.
-Nota
+📚 Lo que practiqué
+Linux
+SSH
+EC2
+VPC
+Subnets
+Route Tables
+Internet Gateway
+Security Groups
+Network ACL
+Elastic IP
+S3
+AWS CLI
+IAM
+IAM Roles
+IAM Policies
+STS
+Principio de mínimo privilegio
+Troubleshooting de infraestructura
+📌 Nota
 
-Este repositorio documenta un laboratorio práctico realizado en AWS. Algunas configuraciones y pruebas originales fueron realizadas mediante AWS CLI y AWS Management Console y no todas las sesiones de terminal fueron conservadas como archivos.
+Este repositorio documenta un laboratorio práctico realizado mediante AWS Management Console y AWS CLI.
 
-Por este motivo, la documentación se centra en la infraestructura configurada, los conceptos practicados y las pruebas que pueden ser verificadas nuevamente.
+No todas las sesiones originales de terminal fueron conservadas, por lo que el repositorio documenta principalmente la infraestructura configurada, las decisiones tomadas y las pruebas que pueden verificarse nuevamente.
