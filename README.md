@@ -2,13 +2,13 @@
 
 Laboratorio práctico de infraestructura realizado en **AWS**.
 
-Trabajé con **EC2, VPC, SSH, Nginx, S3, IAM y AWS CLI**, además de practicar troubleshooting de conectividad y permisos.
+Implementé y configuré una instancia **EC2** conectada a una **VPC**, con acceso **SSH**, servidor **Nginx**, almacenamiento **S3** y permisos mediante **IAM** y **AWS CLI**.
 
 ---
 
 ## 🎯 Objetivo
 
-Practicar la creación y administración de infraestructura básica en AWS.
+Practicar la creación, configuración y troubleshooting de infraestructura básica en AWS.
 
 ---
 
@@ -20,30 +20,32 @@ Practicar la creación y administración de infraestructura básica en AWS.
 
 ## ☁️ EC2
 
-- **Sistema operativo:** Ubuntu 24.04 LTS
-- **Instance Type:** `t3.micro`
-- **Región:** `us-east-1`
-- **Zona:** `us-east-1c`
+| Configuración     | Valor            |
+| ----------------- | ---------------- |
+| Sistema operativo | Ubuntu 24.04 LTS |
+| Instance Type     | `t3.micro`       |
+| Región            | `us-east-1`      |
+| Zona              | `us-east-1c`     |
 
-La instancia fue utilizada como servidor Linux para practicar administración, acceso remoto y comunicación con servicios de AWS.
+La instancia se utilizó como servidor Linux para practicar administración, acceso remoto y comunicación con servicios de AWS.
 
 ---
 
 ## 🌐 Networking
 
-| Recurso | Configuración |
-|---|---|
-| VPC | `172.31.0.0/16` |
-| Subnet | `172.31.16.0/20` |
-| Internet Gateway | Configurado |
-| Route Table | Ruta local + Internet |
-| Network ACL | Revisada |
-| Security Group | SSH + HTTP |
+| Recurso          | Configuración         |
+| ---------------- | --------------------- |
+| VPC              | `172.31.0.0/16`       |
+| Subnet           | `172.31.16.0/20`      |
+| Internet Gateway | Configurado           |
+| Route Table      | Ruta local + Internet |
+| Network ACL      | Revisada              |
+| Security Group   | SSH + HTTP            |
 
 ### Security Group
 
-- SSH → TCP 22 → IP del cliente `/32`
-- HTTP → TCP 80 → `0.0.0.0/0`
+* **SSH** → TCP `22` → IP del cliente `/32`
+* **HTTP** → TCP `80` → `0.0.0.0/0`
 
 El acceso SSH fue restringido a una dirección IP específica.
 
@@ -51,15 +53,15 @@ El acceso SSH fue restringido a una dirección IP específica.
 
 ## 🔑 SSH
 
-Administré la instancia mediante SSH utilizando una clave privada.
+La instancia fue administrada remotamente mediante **SSH** utilizando una clave privada.
 
-También practiqué la protección de la clave mediante permisos de Linux.
+También se practicó la protección de la clave mediante permisos de Linux.
 
 ---
 
 ## 🌐 Nginx
 
-Instalé y verifiqué Nginx dentro de la instancia EC2 y comprobé el acceso mediante HTTP.
+Se instaló y verificó **Nginx** dentro de la instancia EC2 y se comprobó el acceso mediante HTTP.
 
 ---
 
@@ -73,10 +75,10 @@ Los objetos de respaldo se organizaron bajo:
 
 Se practicaron:
 
-- Subida de objetos
-- Eliminación de objetos
-- Consulta de metadatos
-- Control de permisos
+* Subida de objetos
+* Eliminación de objetos
+* Consulta de metadatos
+* Control de permisos
 
 ---
 
@@ -86,11 +88,11 @@ Se practicaron:
 
 **Instance Profile:** `EC2-S3-BackupProfile`
 
-Flujo:
+Flujo de permisos:
 
 **EC2 → Instance Profile → IAM Role → IAM Policy → S3**
 
-Los permisos fueron limitados a:
+Los permisos fueron limitados a los objetos dentro de:
 
 `cloud-returnal-2999/backup/*`
 
@@ -104,7 +106,7 @@ Durante las pruebas, una operación no autorizada como listar el bucket produjo:
 
 `AccessDenied`
 
-Esto permitió comprobar que los permisos IAM estaban funcionando correctamente.
+Esto permitió comprobar que los permisos IAM estaban siendo aplicados correctamente.
 
 ---
 
@@ -120,32 +122,33 @@ Se investigó la conectividad revisando:
 
 La causa fue una regla SSH que todavía utilizaba una dirección IP anterior.
 
-La IP pública del cliente había cambiado.
-
-Después de actualizar la regla correspondiente, se recuperó el acceso SSH.
+La IP pública del cliente había cambiado. Después de actualizar la regla correspondiente, se recuperó el acceso SSH.
 
 ---
 
 ## 📚 Lo que practiqué
 
-- Linux
-- SSH
-- EC2
-- VPC
-- Subnets
-- Route Tables
-- Internet Gateway
-- Security Groups
-- Network ACL
-- Elastic IP
-- S3
-- AWS CLI
-- IAM
-- IAM Roles
-- IAM Policies
-- STS
-- Principio de mínimo privilegio
-- Troubleshooting de infraestructura
+**Linux · SSH · EC2 · VPC · Subnets · Route Tables · Internet Gateway · Security Groups · Network ACL · Elastic IP · S3 · AWS CLI · IAM · IAM Roles · IAM Policies · STS · Mínimo privilegio · Troubleshooting**
+
+---
+
+## 📸 Evidencias
+
+Las configuraciones y pruebas principales del laboratorio están documentadas en [`evidence/`](./evidence/).
+
+Incluyen:
+
+* EC2
+* Networking
+* Security Group
+* VPC y Subnet
+* Route Table
+* Internet Gateway
+* S3
+* IAM Role
+* IAM Policy
+* STS
+* Troubleshooting
 
 ---
 
@@ -153,4 +156,4 @@ Después de actualizar la regla correspondiente, se recuperó el acceso SSH.
 
 Este repositorio documenta un laboratorio práctico realizado mediante **AWS Management Console y AWS CLI**.
 
-No todas las sesiones originales de terminal fueron conservadas, por lo que el repositorio documenta principalmente la infraestructura configurada, las decisiones tomadas y las pruebas realizadas.
+No todas las sesiones originales de terminal fueron conservadas, por lo que la documentación se centra en la infraestructura configurada, las decisiones tomadas y las pruebas realizadas.
