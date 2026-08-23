@@ -37,7 +37,7 @@ Ubuntu 24.04 LTS
             │
             ▼
             S3 
-```text
+        ```text
 
 EC2
 Sistema operativo: Ubuntu 24.04 LTS
