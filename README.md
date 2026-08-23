@@ -1,71 +1,57 @@
 # ☁️ AWS Infrastructure Lab
 
-Laboratorio práctico de infraestructura realizado en **AWS**, donde desplegué y configuré una instancia EC2 y trabajé con networking, SSH, Nginx, S3 e IAM.
+Laboratorio práctico de infraestructura realizado en **AWS**.
+
+Trabajé con **EC2, VPC, SSH, Nginx, S3, IAM y AWS CLI**, además de practicar troubleshooting de conectividad y permisos.
+
+---
 
 ## 🎯 Objetivo
 
-Practicar la creación y administración de infraestructura básica en AWS, incluyendo:
+Practicar la creación y administración de infraestructura básica en AWS.
 
-- EC2
-- VPC y Subnets
-- Security Groups
-- Route Tables
-- Internet Gateway
-- SSH
-- Nginx
-- S3
-- IAM Roles y Policies
-- AWS CLI
-- Troubleshooting
+---
 
 ## 🏗️ Arquitectura
 
 ```text
-                    INTERNET
-                       │
-                       ▼
-                  ┌─────────┐
-                  │   VPC   │
-                  └────┬────┘
-                       │
-                    Subnet
-                       │
-                       ▼
-                  ┌─────────┐
-                  │   EC2   │
-                  │ Ubuntu  │
-                  └────┬────┘
-                       │
-                Instance Profile
-                       │
-                       ▼
-                  IAM Role
-                       │
-                       ▼
-                 IAM Policy
-                       │
-                       ▼
-                  ┌─────────┐
-                  │   S3    │
-                  │ Backup  │
-                  └─────────┘
-EC2
-OS: Ubuntu 24.04 LTS
-Instance Type: t3.micro
-Región: us-east-1
-Zona: us-east-1c
+Internet
+    │
+    ▼
+   VPC
+    │
+  Subnet
+    │
+    ▼
+   EC2
+ Ubuntu 24.04
+    │
+    ▼
+Instance Profile
+    │
+    ▼
+ IAM Role
+    │
+    ▼
+ IAM Policy
+    │
+    ▼
+   S3
+☁️ EC2
+Configuración	Valor
+Sistema operativo	Ubuntu 24.04 LTS
+Instance Type	t3.micro
+Región	us-east-1
+Zona	us-east-1c
 
 La instancia fue utilizada como servidor Linux para practicar administración, acceso remoto y comunicación con servicios de AWS.
 
 🌐 Networking
-
-Configuración principal:
-
 Recurso	Configuración
 VPC	172.31.0.0/16
 Subnet	172.31.16.0/20
 Internet Gateway	Configurado
-Route Table	Ruta local + salida a Internet
+Route Table	Ruta local + Internet
 Network ACL	Revisada
 Security Group	SSH + HTTP
 Security Group
@@ -86,7 +72,7 @@ Instalé y verifiqué Nginx dentro de la instancia EC2 y comprobé el acceso med
 
 🪣 S3
 
-Bucket utilizado:
+Bucket:
 
 cloud-returnal-2999
 
@@ -106,11 +92,11 @@ Para permitir que EC2 interactuara con S3 utilicé un IAM Role:
 
 EC2-s3-BackupRole
 
-Con su Instance Profile:
+Instance Profile:
 
 EC2-S3-BackupProfile
 
-La arquitectura de permisos fue:
+Flujo de permisos:
 
 EC2
  ↓
@@ -122,26 +108,26 @@ IAM Policy
  ↓
 S3
 
-Los permisos fueron limitados a los objetos de:
+Los permisos fueron limitados a:
 
 cloud-returnal-2999/backup/*
 🛡️ Mínimo privilegio
 
-Se configuraron permisos específicos para permitir operaciones sobre los objetos de respaldo.
+Se configuraron permisos específicos para las operaciones necesarias sobre los objetos de respaldo.
 
 Durante las pruebas, una operación no autorizada como listar el bucket produjo:
 
 AccessDenied
 
-Esto permitió comprobar que los permisos IAM estaban funcionando según lo esperado.
+Esto permitió comprobar que los permisos IAM estaban funcionando correctamente.
 
 🔎 Troubleshooting
 
-Durante el laboratorio apareció un problema:
+Durante el laboratorio apareció:
 
 Connection timed out
 
-Se investigó la conectividad revisando:
+Se investigó la conectividad siguiendo esta cadena:
 
 EC2
  ↓
