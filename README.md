@@ -36,7 +36,7 @@ Ubuntu 24.04 LTS
        IAM Policy
             │
             ▼
-           S3 ```
+         ```S3 
 
 EC2
 Sistema operativo: Ubuntu 24.04 LTS
