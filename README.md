@@ -10,7 +10,7 @@ El laboratorio también incluyó pruebas de permisos y resolución de problemas 
 
 ## Arquitectura
 
-```text
+
 Internet
    │
    ▼
@@ -37,7 +37,7 @@ Ubuntu 24.04 LTS
             │
             ▼
             S3 
-        ```text
+       
 
 EC2
 Sistema operativo: Ubuntu 24.04 LTS
