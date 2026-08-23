@@ -10,7 +10,7 @@ El laboratorio también incluyó pruebas de permisos y resolución de problemas 
 
 ## Arquitectura
 
-
+```text
 Internet
    │
    ▼
@@ -36,9 +36,7 @@ Ubuntu 24.04 LTS
        IAM Policy
             │
             ▼
-            S3 
-       
-
+           S3
 EC2
 Sistema operativo: Ubuntu 24.04 LTS
 Instance Type: t3.micro
